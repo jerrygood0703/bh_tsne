@@ -1,0 +1,98 @@
+5/9------------------------------------------------------------------------------------------
+test caffe feature extraction and bh_tsne seperately
+5/10-----------------------------------------------------------------------------------------
+extract 4069 features in txt file then pass through bh_tsne
+5/11-----------------------------------------------------------------------------------------
+// Visualize the map
+//====================
+// in bhtsne.py
+//====================
++=
+// Normalize the map coordinates to 0-1
+ res = np.array(res)
+ norm_res = preprocessing.scale(res, axis = 0)
+ max_abs_scaler = preprocessing.MinMaxScaler()
+ norm_res = max_abs_scaler.fit_transform(norm_res)
++=
+def draw_map(norm_res):
+    seq_txt = open('INIRAtest_list.txt', 'r')
+    map_size = 2000
+    roi_size = 100
+    #norm_res = np.ceil(norm_res * 1000)
+    # full map size = 1000 + roi.size()
+    final_map = np.zeros((map_size, map_size, 3), np.uint8)
+    for x in norm_res:        
+        img = cv2.imread(seq_txt.readline()[:-3])
+
+        # resize roi to 100x100
+        roi = cv2.resize(img,(roi_size, roi_size), interpolation = cv2.INTER_CUBIC)
+
+        a = np.ceil(x[0] * (map_size - roi_size)+1)
+        b = np.ceil(x[1] * (map_size - roi_size)+1)
+        a = a-((a-1) % roi_size)-1
+        b = b-((b-1) % roi_size)-1
+
+        final_map[a:a + roi_size, b:b + roi_size, :] = roi
+    cv2.imwrite("map5.jpeg", final_map, [int(cv2.IMWRITE_JPEG_QUALITY), 95])
+5/12----------------------------------------------------------------------------------------
+//=================
+// clustering
+//=================
+1. Affinity 
+	Affinity Propagation can be interesting as it chooses the number of clusters based on the data provided
+2. DBSCAN # This one is more suitable for this dataset
+	The DBSCAN algorithm views clusters as areas of high density separated by areas of low density. Due to this rather generic view, clusters found by DBSCAN can be any shape, as opposed to k-means which assumes that clusters are convex shaped
+//====================================
+// Compress and Decompress video
+//====================================
+# turn video into images
+ffmpeg -i video.mp4 image%03d.jpg
+# turn images into video
+ffmpeg -f image2 -i image%03d.png video.mp4
+# Compress video # lower crf higher bitrate
+ffmpeg -i input.mp4 -vcodec libx264 -crf 30 output.mp4
+5/13----------------------------------------------------------------------------------------
+//===================================
+// Compress and Download
+//==================================
+find . -type f -exec ffmpeg -i "{}" -vcodec libx264 -crf 30 "{}compressed.mp4" \;
+find . -name '*compressed.mp4' -exec mv {} ../../compressed/ \;
+cd ../../
+tar -zcvf compressed.tar.gz compressed/
+find . -name '*compressed.mp4' -exec rm {} \;
+scp -i EC2_Trial_Project.pem ubuntu@54.183.79.0:/data/finn/compressed.tar.gz compressed.tar.gz
+//==================================
+// Shell script 
+//==================================
+#!/bin/bash
+declare -i count=1
+for d in */ ; do
+    if [ "$d" != "test/" ] && [ "$d" != "test2/" ] ;then
+        echo $count
+        cd $d
+        find . -type f -exec ffmpeg -i "{}" -vcodec libx264 -crf 30 "{}compressed.mp4" \;
+        find . -name '*compressed.mp4' -exec mv {} ../../compressed/ \;
+        cd ../../
+        tar -zcvf compressed$count.tar.gz compressed/
+        find compressed/ '*compressed.mp4' -exec rm {} \;
+        cd testData/
+        count=$((count+1))
+    fi
+done
+####################################
+5/25---------------------------------------------------------------------------------------
+def draw_concatmap(norm_res, labels, data_name)
+# iterate through numpy array
+for inf in np.nditer(dd, op_flags=['readwrite']):
+            if used[index,0] > 0:
+                inf[...] = 1000
+            index+=1  
+5/31---------------------------------------------------------------------------------------
+Open large file: read by chunk
+read data random
+similarity
+6/1----------------------------------------------------------------------------------------
+sampling
+pick out one image from labeled pool
+
+
