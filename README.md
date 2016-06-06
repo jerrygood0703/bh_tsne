@@ -26,17 +26,25 @@ map = fast_tsne(digits', numDims, pcaDims, perplexity, theta);
 gscatter(map(:,1), map(:,2), labels');
 ```
 
-# [Sylar for CNN feature extraction]
+# Sylar for CNN feature extraction
 
-# prepare image list
-# copy the list to caffe/cmake_build/examples/_temp/ and /bh_tsne
+prepare image list
+copy the list to caffe/cmake_build/examples/_temp/ and /bh_tsne
+'''bash
 cd caffe/
 ./cmake_build/tools/extract_features models/bvlc_reference_caffenet/bvlc_reference_caffenet.caffemodel cmake_build/examples/_temp/imagenet_val.prototxt fc7 cmake_build/examples/_temp/features 12 leveldb GPU 0 >> feature_human.txt
-# remember to modify imagenet_val.prototxt
+'''
+remember to modify imagenet_val.prototxt
+'''bash
 cp feature_human.txt /bh_tsne
-# In bhtsne.py:
-#1 seq_txt = open('INIRAtest_list.txt', 'r')
-#2 map_size = 2000
-#3 cv2.imwrite("map5.jpeg", final_map, [int(cv2.IMWRITE_JPEG_QUALITY), 95])
-# can be modify
+'''
+In bhtsne.py:
+'''python
+seq_txt = open('INIRAtest_list.txt', 'r')
+map_size = 2000
+cv2.imwrite("map5.jpeg", final_map, [int(cv2.IMWRITE_JPEG_QUALITY), 95])
+'''
+'''bash
+can be modify
 ./bhtsne.py -i feature_human.txt -v -p 50 -o res
+'''
