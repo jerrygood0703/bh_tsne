@@ -31,6 +31,7 @@ gscatter(map(:,1), map(:,2), labels');
 clone from https://github.com/lvdmaaten/bhtsne/
 
 prepare image list
+
 copy the list to caffe/cmake_build/examples/_temp/ and /bh_tsne
 ```bash
 cd caffe/
