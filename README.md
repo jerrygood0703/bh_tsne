@@ -2,6 +2,8 @@
 This software package contains a Barnes-Hut implementation of the t-SNE algorithm. The implementation is described in [this paper](http://lvdmaaten.github.io/publications/papers/JMLR_2014.pdf).
 
 
+[Sylar] clone from https://github.com/lvdmaaten/bhtsne/
+
 # Installation #
 
 Compile the source using the following command:
@@ -27,8 +29,6 @@ gscatter(map(:,1), map(:,2), labels');
 ```
 
 # Sylar for CNN feature extraction
-
-clone from https://github.com/lvdmaaten/bhtsne/
 
 prepare image list
 
