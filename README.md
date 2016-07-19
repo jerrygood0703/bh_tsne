@@ -28,7 +28,13 @@ map = fast_tsne(digits', numDims, pcaDims, perplexity, theta);
 gscatter(map(:,1), map(:,2), labels');
 ```
 
-# Sylar for CNN feature extraction
+# Sylar 
+
+>for t-SNE visualizing
+
+[from Andrej Karpathy](http://cs.stanford.edu/people/karpathy/cnnembed/)
+
+>for CNN feature extraction
 
 prepare image list
 
